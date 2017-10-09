@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Label x:Name="Messages" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" x:Name="Messages" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="StartTask" Content="Iniciar tarea" Margin="5" Padding="5" Click="StartTask_Click"/>
+            <Button x:Name="CancelTask" Content="Cancelar tarea" Margin="5" Padding="5" Click="CancelTask_Click"/>
+            <Button x:Name="ShowStatus" Content="Mostrar estatus" Margin="5" Padding="5" Click="ShowStatus_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

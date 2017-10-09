@@ -21,12 +21,17 @@ namespace csharpavanzado.Lab01
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Ejercicio 4
+        CancellationTokenSource CTS;
+        CancellationToken CT;
+        Task LongRunningTask;
+        #endregion
         public MainWindow()
         {
             InitializeComponent();
             //CreateTask();
             //RunTaskGroup();
-            ReturnTaskValue();
+            //ReturnTaskValue();
         }
 
         void CreateTask()
@@ -173,5 +178,67 @@ namespace csharpavanzado.Lab01
         }
 
         // Ejercicio 4
+        private void StartTask_Click(object sender, RoutedEventArgs e)
+        {
+            // Creamos el origen del token de cancelacion
+            CTS = new CancellationTokenSource();
+            // Obtenemos el token de cancelacion
+            CT = CTS.Token;
+            // Creamos la tarea y pasamos el token de cancelacion al metodo delegado
+            Task.Run(() =>
+            {
+                LongRunningTask = Task.Run(() =>
+                {
+                    DoLongLongRunningTask(CT);
+                }, CT);
+                try
+                {
+                    LongRunningTask.Wait();
+                }
+                catch (AggregateException ae)
+                {
+                    foreach(var Inner in ae.InnerExceptions)
+                    {
+                        if(Inner is TaskCanceledException)
+                        {
+                            AddMessage("Tarea cancelada y TaskCanceledException manejado");
+                        }
+                        else
+                        {
+                            // Procesamos excepciones distintas a cancelacion
+                            AddMessage(Inner.Message);
+                        }
+                    }
+                }
+            });
+        }
+
+        void DoLongLongRunningTask(CancellationToken ct)
+        {
+            int[] IDs = { 1, 3, 4, 7, 11, 18, 29, 47, 76, 100 };
+            for (int i = 0; i < IDs.Length && !ct.IsCancellationRequested; i++)
+            {
+                AddMessage($"Procesando ID: {IDs[i]}");
+                Thread.Sleep(2000); // Simular un proceso largo
+            }
+
+            if (ct.IsCancellationRequested)
+            {
+                // Finalizar el procesamiento
+                AddMessage("Proceso cancelado");
+                ct.ThrowIfCancellationRequested();
+            }
+        }
+
+        private void CancelTask_Click(object sender, RoutedEventArgs e)
+        {
+            // Invocando al metodo del objecto CancellationTokenSource
+            CTS.Cancel();
+        }
+
+        private void ShowStatus_Click(object sender, RoutedEventArgs e)
+        {
+            AddMessage($"Estatus de la tarea: {LongRunningTask.Status}");
+        }
     }
 }
