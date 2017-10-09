@@ -24,8 +24,9 @@ namespace csharpavanzado.Lab01
         public MainWindow()
         {
             InitializeComponent();
-            // CreateTask();
-            RunTaskGroup();
+            //CreateTask();
+            //RunTaskGroup();
+            ReturnTaskValue();
         }
 
         void CreateTask()
@@ -150,5 +151,27 @@ namespace csharpavanzado.Lab01
             Task.WaitAny(TaskGroup);
             WriteToOutput("Al menos una tarea finalizo.");
         }
+
+        // Ejercicio 3
+        void ReturnTaskValue()
+        {
+            Task<int> T;
+            T = Task.Run<int>(() => new Random().Next(1000));
+            // La clase Tasl<TResult> expone una propiedad se solo lectura llamada Result.
+            // Despues de que la tarea termine su ejecucion, podemos utilizar la propiedad Result para recuperar el valor devuelto por la tarea.
+            WriteToOutput($"Valor devuelto por la Tarea: {T.Result}");
+
+            Task<int> T2 = Task.Run<int>(() =>
+            {
+                WriteToOutput("Obtener el numero aleatorio...");
+                Thread.Sleep(10000); // Simular proceso largo
+                return new Random().Next(1000);
+            });
+            WriteToOutput("Esperar el resultado de la tarea...");
+            WriteToOutput($"La Tarea devolvio el valor {T.Result}");
+            WriteToOutput("Fin de la ejecucion del ReturnTaskValue");
+        }
+
+        // Ejercicio 4
     }
 }
