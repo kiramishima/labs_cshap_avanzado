@@ -15,10 +15,10 @@ namespace csharpavanzado.Lab02
             //ParallelLoopIterate();
             //RunLINQ();
             //RunPLINQ();
-
             //RunContinuationTasks();
-            // RunNestedTasks();
-            RunNestedTasks2();
+            //RunNestedTasks();
+            //RunNestedTasks2();
+            HandleTaskExceptions();
             Console.WriteLine("Presione <enter> para finalizar.");
             Console.ReadLine();
         }
@@ -186,6 +186,56 @@ namespace csharpavanzado.Lab02
             });
             OuterTask.Wait();
             Console.WriteLine("Tarea externa finalizada");
+        }
+        #endregion
+        #endregion
+
+        #region Ejercicio 3: Manejo de excepciones en Tareas
+        #region Tarea 1 Atrapar excepciones de Tareas
+        static void RunLongTask(CancellationToken token)
+        {
+            for (int i =0; i < 5; i++)
+            {
+                // Simular un proceso de larga duracion
+                Thread.Sleep(2000);
+                // Lanzar un OperationCanceledException si se solicita una cancelacion
+                token.ThrowIfCancellationRequested();
+            }
+        }
+        /// <summary>
+        /// Metodo que nos permitira manejar excepciones
+        /// </summary>
+        static void HandleTaskExceptions()
+        {
+            // Obtener un Token de cancelacion
+            var CTS = new CancellationTokenSource();
+            var CT = CTS.Token;
+
+            var LongRunningTask = Task.Run(() => RunLongTask(CT), CT);
+            CTS.Cancel();
+            try
+            {
+                LongRunningTask.Wait();
+            }
+            catch(AggregateException ae)
+            {
+                foreach(var Inner in ae.InnerExceptions)
+                {
+                    if(Inner is TaskCanceledException)
+                    {
+                        Console.WriteLine("La tarea fue cancelada.");
+                    }
+                    else
+                    {
+                        // Aqui procesamos las excepciones distintas a la cancelacion
+                        Console.WriteLine(Inner.Message);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Excepcion: {ex.Message}");
+            }
         }
         #endregion
         #endregion
