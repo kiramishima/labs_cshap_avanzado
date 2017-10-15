@@ -13,12 +13,16 @@ namespace csharpavanzado.Lab02
         {
             //RunParallelTasks();
             //ParallelLoopIterate();
-            RunLINQ();
-            RunPLINQ();
+            //RunLINQ();
+            //RunPLINQ();
+
+            //RunContinuationTasks();
+            // RunNestedTasks();
+            RunNestedTasks2();
             Console.WriteLine("Presione <enter> para finalizar.");
             Console.ReadLine();
         }
-
+        #region Ejercicio 1
         static void RunParallelTasks()
         {
             Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}. Ejecutar tareas en paralelo");
@@ -101,6 +105,89 @@ namespace csharpavanzado.Lab02
             S.Stop();
             Console.WriteLine($"Tiempo de ejecucion con PLINQ: {S.ElapsedTicks} Ticks");
         }
+        #endregion
+        #endregion
+
+        #region Ejercicio 2
+        #region Tarea 1 Tareas de continuacion (Continuation Task)
+        // Las Continuation Task permiten encadenar varias tareas juntas para que se ejecuten una tras otra.
+        // La tarea que, al finalizar invoca a otra tarea, es conocida como Antecedente y la tarea que esta invoca,
+        // es conocida como Continuacion. Podemos pasar datos desde la tarea Antecedente hacia la tarea de Continuacion
+        // y podemos controlar la ejecucion de la cadena de tareas de varias formas.
+        /// <summary>
+        /// Devuelve una lista con los nombres de los productos del repositorio de datos Northwind
+        /// </summary>
+        /// <returns></returns>
+        static List<string> GetProductNames()
+        {
+            // Simular un proceso de larga duracion
+            Thread.Sleep(3000);
+            return NorthWind.Repository.Products.Select(p => p.ProductName).ToList();
+        }
+
+        static void RunContinuationTasks()
+        {
+            var FirstTask = new Task<List<string>>(GetProductNames);
+
+            var SecondTask = FirstTask.ContinueWith(antecedent =>
+            {
+                return ProcessData(antecedent.Result);
+            });
+            // Iniciamos la primera tarea, para obtener el resultado de la segunda tarea
+            FirstTask.Start();
+            Console.WriteLine($"Numero de productos procesados: {SecondTask.Result}");
+        }
+        /// <summary>
+        /// Se ejecuta cuando la primera tarea finaliza
+        /// </summary>
+        /// <param name="productNames"></param>
+        /// <returns></returns>
+        static int ProcessData(List<string> productNames)
+        {
+            // Simular procesamiento de datos
+            foreach(var ProductName in productNames)
+            {
+                Console.WriteLine(ProductName);
+            }
+            return productNames.Count;
+        }
+        #endregion
+        #region Tarea 2 Crear Tablas Anidadas
+        static void RunNestedTasks()
+        {
+            var OuterTask = Task.Factory.StartNew(() =>
+            {
+                Console.WriteLine("Iniciando la tarea externa...");
+                var InnerTask = Task.Factory.StartNew(() =>
+                {
+                    Console.WriteLine("Iniciando tarea anidada...");
+                    // Simular un proceso de larga duracion
+                    Thread.Sleep(3000);
+                    Console.WriteLine("Finalizando la tarea anidada...");
+                });
+            });
+            OuterTask.Wait();
+            Console.WriteLine("Tarea externa finalizada");
+        }
+        #endregion
+        #region Tarea 3 Crear Tareas Hijas
+        static void RunNestedTasks2()
+        {
+            var OuterTask = Task.Factory.StartNew(() =>
+            {
+                Console.WriteLine("Iniciando la tarea externa...");
+                var InnerTask = Task.Factory.StartNew(() =>
+                {
+                    Console.WriteLine("Iniciando tarea anidada...");
+                    // Simular un proceso de larga duracion
+                    Thread.Sleep(3000);
+                    Console.WriteLine("Finalizando la tarea anidada...");
+                }, TaskCreationOptions.AttachedToParent);
+            });
+            OuterTask.Wait();
+            Console.WriteLine("Tarea externa finalizada");
+        }
+        #endregion
         #endregion
     }
 }
