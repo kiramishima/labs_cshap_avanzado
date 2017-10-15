@@ -5,14 +5,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace csharpavanzado.Lab023
+namespace csharpavanzado.Lab02
 {
     class Program
     {
         static void Main(string[] args)
         {
             //RunParallelTasks();
-            ParallelLoopIterate();
+            //ParallelLoopIterate();
+            RunLINQ();
+            RunPLINQ();
             Console.WriteLine("Presione <enter> para finalizar.");
             Console.ReadLine();
         }
@@ -66,6 +68,39 @@ namespace csharpavanzado.Lab023
         #endregion
 
         #region Tarea 4 PLINQ
+        static void RunLINQ()
+        {
+            // Declarar una variable para medir el tiempo de ejecucion.
+            var S = new System.Diagnostics.Stopwatch();
+            S.Start();
+            var DTOProducts = NorthWind.Repository.Products.Select(p =>
+            new ProductDTO
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                UnitPrice = p.UnitPrice,
+                UnitsInStock = p.UnitsInStock
+            }).ToList();
+            S.Stop();
+            Console.WriteLine($"Tiempo de ejecucion con LINQ: {S.ElapsedTicks} Ticks");
+        }
+
+        static void RunPLINQ()
+        {
+            // Declarar una variable para medir el tiempo de ejecucion.
+            var S = new System.Diagnostics.Stopwatch();
+            S.Start();
+            var DTOProducts = NorthWind.Repository.Products.AsParallel().Select(p =>
+            new ProductDTO
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                UnitPrice = p.UnitPrice,
+                UnitsInStock = p.UnitsInStock
+            }).ToList();
+            S.Stop();
+            Console.WriteLine($"Tiempo de ejecucion con PLINQ: {S.ElapsedTicks} Ticks");
+        }
         #endregion
     }
 }
