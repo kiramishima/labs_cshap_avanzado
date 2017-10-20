@@ -1,0 +1,14 @@
+﻿<Window x:Class="csharpavanzado.Lab03_APM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:csharpavanzado.Lab03_APM"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <StackPanel>
+        <TextBox x:Name="URLToValidate" Height="38" />
+        <Button x:Name="ValidateURL" Content="Validar URL" Width="100" Height="38" Click="ValidateURL_Click" />
+        <Label x:Name="Result" Height="38" />
+    </StackPanel>
+</Window>
