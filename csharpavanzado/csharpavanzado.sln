@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharpavanzado.Lab03_Callba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharpavanzado.Lab03_APM", "csharpavanzado.Lab03_APM\csharpavanzado.Lab03_APM.csproj", "{4033F9B8-2623-4E7B-917F-B650C8DC5B6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharpavanzado.Lab03_Exceptions", "csharpavanzado.Lab03_Exceptions\csharpavanzado.Lab03_Exceptions.csproj", "{24E8D92C-2048-46FB-BFF9-DF7795076A1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{4033F9B8-2623-4E7B-917F-B650C8DC5B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4033F9B8-2623-4E7B-917F-B650C8DC5B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4033F9B8-2623-4E7B-917F-B650C8DC5B6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E8D92C-2048-46FB-BFF9-DF7795076A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E8D92C-2048-46FB-BFF9-DF7795076A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E8D92C-2048-46FB-BFF9-DF7795076A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E8D92C-2048-46FB-BFF9-DF7795076A1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
